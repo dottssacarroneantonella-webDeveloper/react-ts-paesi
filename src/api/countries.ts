@@ -43,7 +43,7 @@ const CACHE_TTL_MS = 60 * 60 * 1000; // 1 ora
 /** Messaggi in italiano per gli errori più comuni dell'API. */
 const STATUS_MESSAGES: Record<number, string> = {
   401: 'Chiave API mancante, non valida o revocata. Controlla il file .env.',
-  403: 'Accesso negato: account sospeso o limite mensile superato.',
+  403: 'Accesso negato (403): controlla gli hostname consentiti della chiave (serve "localhost") e lo stato dell\'account.',
   429: 'Troppe richieste in poco tempo. Attendi qualche secondo e riprova.',
 };
 
@@ -108,10 +108,10 @@ async function fetchPage(offset: number, signal?: AbortSignal): Promise<ApiListR
     // L'API spiega l'errore nel campo errors[0].message: lo usiamo se non abbiamo un messaggio nostro.
     const body = (await response.json().catch(() => null)) as ApiErrorResponse | null;
     const apiMessage = body?.errors?.[0]?.message;
-    throw new Error(
-      STATUS_MESSAGES[response.status] ??
-        `Il server ha risposto con errore ${response.status}.${apiMessage ? ` ${apiMessage}` : ''}`,
-    );
+    const ourMessage =
+      STATUS_MESSAGES[response.status] ?? `Il server ha risposto con errore ${response.status}.`;
+    // Mostriamo anche il dettaglio dell'API: indica la causa precisa (es. hostname non consentito).
+    throw new Error(apiMessage ? `${ourMessage} Dettaglio: ${apiMessage}` : ourMessage);
   }
 
   const data: unknown = await response.json();
