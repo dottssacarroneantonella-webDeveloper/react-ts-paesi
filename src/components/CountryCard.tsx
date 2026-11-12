@@ -30,7 +30,7 @@ export function CountryCard({ country }: CountryCardProps) {
       ) : (
         // Segnaposto quando l'API non fornisce la bandiera o l'immagine non si carica.
         <div className="card__flag card__flag--missing" role="img" aria-label={`Bandiera di ${country.name} non disponibile`}>
-          <span aria-hidden="true">{country.code}</span>
+          <span aria-hidden="true">{country.code || country.name.slice(0, 3).toUpperCase()}</span>
         </div>
       )}
       <div className="card__body">

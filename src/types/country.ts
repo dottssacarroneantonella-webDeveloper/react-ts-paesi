@@ -31,8 +31,10 @@ export const REGION_LABELS: Record<Region, string> = {
 
 /** Un Paese restituito dall'API v5, limitato ai campi richiesti con response_fields. */
 export interface ApiCountry {
+  uuid?: string;
   codes: {
-    alpha_3: string;
+    alpha_2?: string;
+    alpha_3?: string;
   };
   names: {
     common: string;
@@ -74,7 +76,9 @@ export interface ApiErrorResponse {
 
 /** Modello usato dall'interfaccia. */
 export interface Country {
-  /** Codice ISO 3166-1 alpha-3, unico: lo usiamo come `key` nelle liste. */
+  /** Identificativo unico e stabile: lo usiamo come `key` nelle liste. */
+  id: string;
+  /** Codice ISO 3166-1 alpha-3 (vuoto per alcuni territori senza codice ISO, es. Abkhazia). */
   code: string;
   name: string;
   officialName: string;

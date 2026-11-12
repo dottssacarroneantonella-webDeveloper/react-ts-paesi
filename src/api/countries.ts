@@ -20,6 +20,8 @@ const API_KEY: string | undefined = import.meta.env.VITE_RESTCOUNTRIES_API_KEY;
 
 /** Solo i campi che servono all'interfaccia: risposta più leggera. */
 const RESPONSE_FIELDS = [
+  'uuid',
+  'codes.alpha_2',
   'codes.alpha_3',
   'names.common',
   'names.official',
@@ -37,7 +39,7 @@ const PAGE_SIZE = 100;
 const MAX_PAGES = 5;
 
 /** Cache nella sessione del browser: evita di consumare richieste a ogni ricarica (piano gratuito: 1.000 al mese). */
-const CACHE_KEY = 'react-ts-paesi:countries:v5';
+const CACHE_KEY = 'react-ts-paesi:countries:v5.1'; // cambiare il nome se cambia la forma dei dati
 const CACHE_TTL_MS = 60 * 60 * 1000; // 1 ora
 
 /** Messaggi in italiano per gli errori più comuni dell'API. */
@@ -59,9 +61,13 @@ export function toCountry(raw: ApiCountry): Country | null {
   }
 
   const name = raw.names.common;
+  // Alcuni territori (es. Abkhazia, Somaliland) non hanno codice ISO: serve un id alternativo
+  // perché la `key` delle liste React deve essere unica.
+  const code = raw.codes.alpha_3 ?? '';
 
   return {
-    code: raw.codes.alpha_3,
+    id: raw.uuid || code || raw.codes.alpha_2 || name,
+    code,
     name,
     officialName: raw.names.official,
     capitals: (raw.capitals ?? []).map((capital) => capital.name),
