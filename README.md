@@ -2,7 +2,7 @@
 
 Mini applicazione web che scarica l'elenco dei Paesi dall'API pubblica **[REST Countries](https://restcountries.com)** e lo mostra in una **lista filtrabile e ordinabile**.
 
-Realizzata da **Antonella Carrone** come progetto di portfolio frontend.
+Realizzata come progetto di portfolio frontend.
 
 ## Funzionalità
 
