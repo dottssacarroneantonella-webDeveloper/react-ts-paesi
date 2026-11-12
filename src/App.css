@@ -115,6 +115,7 @@ button:hover {
 
 .toolbar__reset {
   align-self: end;
+  white-space: nowrap;
 }
 
 /* ===== Risultati ===== */
@@ -150,6 +151,15 @@ button:hover {
   object-fit: cover;
   border-bottom: 1px solid var(--color-border);
   background: var(--color-bg);
+}
+
+.card__flag--missing {
+  display: grid;
+  place-items: center;
+  color: var(--color-muted);
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
 }
 
 .card__body {
