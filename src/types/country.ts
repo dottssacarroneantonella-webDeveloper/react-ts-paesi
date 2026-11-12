@@ -29,21 +29,47 @@ export const REGION_LABELS: Record<Region, string> = {
   Oceania: 'Oceania',
 };
 
-/** Forma dei dati restituiti dall'endpoint /v3.1/all con i campi richiesti. */
+/** Un Paese restituito dall'API v5, limitato ai campi richiesti con response_fields. */
 export interface ApiCountry {
-  cca3: string;
-  name: {
+  codes: {
+    alpha_3: string;
+  };
+  names: {
     common: string;
     official: string;
   };
-  capital?: string[];
+  capitals?: {
+    name: string;
+  }[];
   region: string;
-  population: number;
-  flags: {
-    png: string;
-    svg: string;
-    alt?: string;
+  population?: number;
+  flag: {
+    url_svg: string;
+    url_png: string;
+    description?: string;
   };
+}
+
+/** Risposta dell'elenco paginato: GET /countries/v5?limit=…&offset=… */
+export interface ApiListResponse {
+  data: {
+    objects: ApiCountry[];
+    meta: {
+      total: number;
+      count: number;
+      limit: number;
+      offset: number;
+      more: boolean;
+    };
+  };
+}
+
+/** Corpo delle risposte di errore dell'API. */
+export interface ApiErrorResponse {
+  errors?: {
+    message: string;
+    code?: string;
+  }[];
 }
 
 /** Modello usato dall'interfaccia. */

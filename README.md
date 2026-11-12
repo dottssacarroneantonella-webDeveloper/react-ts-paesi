@@ -6,7 +6,8 @@ Realizzata come progetto di portfolio frontend.
 
 ## Funzionalità
 
-- Caricamento dei dati da un'API REST con `fetch` e `async/await`, annullabile con `AbortController`
+- Caricamento dei dati dall'API REST Countries v5 con `fetch` e `async/await`: autenticazione con chiave, paginazione (100 Paesi per richiesta), annullamento con `AbortController`
+- Cache di un'ora in `sessionStorage`, per non consumare richieste a ogni ricarica
 - Ricerca per nome o capitale, senza distinzione tra maiuscole e accenti ("cote" trova "Côte d'Ivoire")
 - Filtro per regione e ordinamento per nome o per popolazione
 - Contatore dei risultati e pulsante "Azzera filtri"
@@ -27,10 +28,28 @@ Realizzata come progetto di portfolio frontend.
 
 Prerequisiti: [Node.js](https://nodejs.org) versione LTS (20 o successiva) e Git.
 
+### 1. Ottieni una chiave API gratuita
+
+1. Registrati su [restcountries.com/sign-up](https://restcountries.com/sign-up) (piano Free: 1.000 richieste al mese).
+2. Nella pagina **API Keys** crea una chiave e, tra gli hostname consentiti, aggiungi `localhost`. Senza questo passaggio il browser blocca le richieste (CORS).
+
+### 2. Configura e avvia
+
 ```bash
 git clone https://github.com/dottssacarroneantonella-webDeveloper/react-ts-paesi.git
 cd react-ts-paesi
 npm install
+```
+
+Copia `.env.example` in un nuovo file `.env` e inserisci la chiave:
+
+```bash
+VITE_RESTCOUNTRIES_API_KEY=la-tua-chiave
+```
+
+Poi avvia il server di sviluppo:
+
+```bash
 npm run dev
 ```
 
@@ -66,8 +85,8 @@ src/
 ## Flusso dei dati
 
 ```text
-REST Countries API
-      │  fetch (api/countries.ts) → conversione ApiCountry → Country
+REST Countries API v5 (chiave nel file .env)
+      │  fetch paginato (api/countries.ts) → conversione ApiCountry → Country → cache
       ▼
 useCountries()  →  state: loading | error | success
       ▼
@@ -80,7 +99,9 @@ CountryList → CountryCard (una per Paese)
 ## Note
 
 - In sviluppo `React.StrictMode` esegue gli effetti due volte: è normale vedere due richieste all'API negli strumenti del browser.
-- L'API è pubblica e non richiede chiavi: nel progetto non ci sono credenziali.
+- La chiave API sta solo nel file `.env`, escluso da Git: nel repository non ci sono credenziali.
+- Le variabili `VITE_*` vengono incluse nel JavaScript inviato al browser, quindi in un sito pubblicato la chiave è leggibile. Per questo va limitata ai propri domini nella pagina **API Keys** di REST Countries.
+- Dopo aver modificato `.env` bisogna riavviare `npm run dev`.
 
 ## Licenza
 
